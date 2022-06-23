@@ -42,7 +42,7 @@ body,
   background-color: var(--dark-bg-accent) !important;
 }
 
-.curriculum-details-tile,
+.course-badge-tile,
 .odin-dark-mobile-menu,
 .odin-dark-nav-item,
 .odin-dark-bg,
@@ -51,7 +51,11 @@ body,
   background: var(--dark-bg-color) !important;
 }
 
-.curriculum-details-tile:hover {
+.odin-dark-link {
+  color: var(--dark-font-color) !important;
+}
+
+.course-badge-tile:hover {
   box-shadow: 0 10px 22px 0 rgba(0, 0, 0, 0.5) !important;
   -webkit-box-shadow: 0 10px 22px 0 rgba(0, 0, 0, 0.5) !important;
 }
@@ -106,11 +110,6 @@ pre:not(.line-numbers) code {
   color: var(--dark-pseudocode-color) !important;
 }
 
-progress-circle__image,
-progress-circle__inner {
-  background-color: var(--dark-bg-accent) !important;
-}
-
 .react-modal__body,
 .react-modal__body h1 {
   background-color: var(--dark-bg-color) !important;
@@ -132,6 +131,6 @@ progress-circle__inner {
   color: var(--dark-header-color) !important;
 }
 
-.progress-circle__content {
-  color: var(--dark-bg-accent) !important;
+.advert__icon {
+  filter: invert(1);
 }

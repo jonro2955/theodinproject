@@ -5,6 +5,8 @@ course = @path.add_course do |course|
   course.title = 'Ruby'
   course.description = "Time to dive deep into Ruby, the language 'designed for programmer happiness.' You'll cover object-oriented design, testing, and data structures – essential knowledge for learning other programming languages, too!"
   course.identifier_uuid = '643bf355-19f1-4326-a4ad-8ec57f9ea254'
+  course.show_on_homepage = true
+  course.badge_uri = 'badge-ruby.svg'
 end
 
 # +++++++++++++++++++++++++++++++
@@ -144,7 +146,7 @@ end
 # +++++++++++++++++++++++++++++++++
 course.add_section do |section|
   section.title = 'Testing Ruby with RSpec'
-  section.description = "You've been briefly introduced to testing in Ruby a couple of times before in the Foundations course, but now you're going to really learn why testing can be hugely helpful and how to apply it to your own projects."
+  section.description = "You've been briefly introduced to testing in Ruby a couple of times before in this course, but now you're going to really learn why testing can be hugely helpful and how to apply it to your own projects."
   section.identifier_uuid = '1e8d5245-ed37-498e-a06e-be208aced01f'
 
   section.add_lessons(

@@ -9,11 +9,11 @@ RSpec.describe 'Selecting Paths', type: :system do
     sign_in(user)
   end
 
-  context 'on the paths index page' do
+  context 'when on the paths index page' do
     it 'allows a user to select a path' do
       visit paths_path
 
-      expect(find(:test_id, 'foundations-resume-path-btn').value).to eq('Resume')
+      expect(find(:test_id, 'foundations-resume-path-btn').text).to eq('Resume')
       expect(find(:test_id, 'rails-select-path-btn').value).to eq('Select')
 
       find(:test_id, 'rails-select-path-btn').click
@@ -24,7 +24,7 @@ RSpec.describe 'Selecting Paths', type: :system do
     end
   end
 
-  context 'on the path show page' do
+  context 'when on the path show page' do
     it 'allows a user to select to that path' do
       visit path_path(rails_path)
       find(:test_id, 'rails-select-path-btn').click

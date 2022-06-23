@@ -1,10 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe LessonContentImporter do
-  subject { LessonContentImporter.new(lesson) }
+  subject(:importer) { described_class.new(lesson) }
 
   let(:lesson) do
-    create(:lesson, content: lesson_content, title: 'Ruby Basics', url: '/ruby_basics/variables')
+    create(:lesson, content: lesson_content, title: 'Ruby Basics', github_path: '/ruby_basics/variables')
   end
 
   let(:lesson_content) { "<p>Hello World</p>\n" }
@@ -16,33 +16,31 @@ RSpec.describe LessonContentImporter do
       .with('theodinproject/curriculum', path: '/ruby_basics/variables')
       .and_return(lesson_content_from_github)
 
-    allow(Base64).to receive_message_chain(:decode64, :force_encoding)
-      .and_return(decoded_lesson_content)
+    allow(Base64).to receive(:decode64).and_return(decoded_lesson_content)
+    allow(decoded_lesson_content).to receive(:force_encoding).and_return(decoded_lesson_content)
   end
 
   describe '.import_all' do
-    let(:lessons) { create_list(:lesson, 3) }
-
-    before do
-      lessons
-    end
-
     it 'updates the content for all lessons' do
-      expect(LessonContentImporter).to receive(:for).thrice
-      LessonContentImporter.import_all
+      lessons = create_list(:lesson, 3)
+      allow(described_class).to receive(:for)
+
+      described_class.import_all
+
+      expect(described_class).to have_received(:for).thrice
     end
   end
 
   describe '#import' do
     it 'updates the lesson content' do
-      expect { subject.import }.to change { lesson.reload.content }.to("<p>Hello World!</p>\n")
+      expect { importer.import }.to change { lesson.reload.content }.to("<p>Hello World!</p>\n")
     end
 
     context 'when lesson content is the same as the github content' do
       let(:decoded_lesson_content) { 'Hello World' }
 
       it 'does not update the lesson content' do
-        expect { subject.import }.not_to change { lesson.reload.content }
+        expect { importer.import }.not_to change { lesson.reload.content }
       end
     end
 
@@ -57,13 +55,16 @@ RSpec.describe LessonContentImporter do
               body: { error: 'problem' }
             )
           )
+
+        allow(Rails.logger).to receive(:error)
       end
 
       it 'logs the error' do
-        expect(Rails).to receive_message_chain(:logger, :error)
-          .with("Failed to import 'Ruby Basics' message: GET : 403 - Error: problem")
+        importer.import
 
-        subject.import
+        expect(Rails.logger).to have_received(:error).with(
+          "Failed to import 'Ruby Basics' message: GET : 403 - Error: problem"
+        )
       end
     end
   end

@@ -5,7 +5,7 @@ module Seeds
   class CourseSeeder
     include Seeds::Helpers
 
-    attr_accessor :identifier_uuid, :title, :description, :position
+    attr_accessor :identifier_uuid, :title, :description, :position, :show_on_homepage, :badge_uri
 
     def initialize(path, position)
       @path = path
@@ -16,16 +16,17 @@ module Seeds
       @course = course
     end
 
-    def self.create(path, position, &block)
-      new(path, position, &block)
+    def self.create(path, position, &)
+      new(path, position, &)
     end
 
-    def add_section(&block)
-      Seeds::SectionSeeder.create(course, section_position, &block).tap do |section|
+    def add_section(&)
+      Seeds::SectionSeeder.create(course, section_position, &).tap do |section|
         seeded_sections.push(section)
       end
     end
 
+    # rubocop:disable Metrics/AbcSize
     def course
       @course ||= ::Course.seed(:identifier_uuid) do |course|
         course.identifier_uuid = identifier_uuid
@@ -33,8 +34,11 @@ module Seeds
         course.description = description
         course.position = position
         course.path_id = path.id
+        course.show_on_homepage = show_on_homepage || false
+        course.badge_uri = badge_uri
       end.first
     end
+    # rubocop:enable Metrics/AbcSize
 
     def delete_removed_seeds
       destroy_removed_seeds(course.lessons, seeded_lessons)

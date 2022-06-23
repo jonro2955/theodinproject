@@ -46,7 +46,7 @@ RSpec.describe Seeds::SectionSeeder do
           identifier_uuid: 'section_uuid',
           title: 'Intermediate Section',
           position: 2,
-          course: course
+          course:
         )
 
         expect { section_seeder }.to change { existing_section.reload.title }
@@ -68,13 +68,13 @@ RSpec.describe Seeds::SectionSeeder do
             title: 'Ruby Lesson',
             description: 'A Ruby Lesson',
             identifier_uuid: 'lesson_uuid_1',
-            url: '/github/url',
+            github_path: '/github/url',
           },
           {
             title: 'JS Lesson',
             description: 'A JS Lesson',
             identifier_uuid: 'lesson_uuid_2',
-            url: '/github/url',
+            github_path: '/github/url',
           }
         )
       end.to change { course.lessons.count }.from(0).to(2)
@@ -87,19 +87,19 @@ RSpec.describe Seeds::SectionSeeder do
             title: 'Ruby Lesson',
             description: 'A Ruby Lesson',
             identifier_uuid: 'lesson_uuid_1',
-            url: '/github/url_ruby',
+            github_path: '/github/url_ruby',
           },
           {
             title: 'JS Lesson',
             description: 'A JS Lesson',
             identifier_uuid: 'lesson_uuid_2',
-            url: '/github/url_js',
+            github_path: '/github/url_js',
           },
           {
             title: 'HTML and CSS Lesson',
             description: 'A HTML and CSS Lesson',
             identifier_uuid: 'lesson_uuid_3',
-            url: '/github/url_html',
+            github_path: '/github/url_html',
           }
         ).flatten
 

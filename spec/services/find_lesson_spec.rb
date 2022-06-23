@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe FindLesson do
-  subject(:find_lesson) { FindLesson.new(current_lesson, course) }
+  subject(:find_lesson) { described_class.new(current_lesson, course) }
 
   let(:current_lesson)  { middle_lesson }
   let(:course) { instance_double(Course, lessons: [first_lesson, middle_lesson, last_lesson]) }
@@ -18,7 +18,7 @@ RSpec.describe FindLesson do
       let(:current_lesson) { last_lesson }
 
       it 'returns nil' do
-        expect(find_lesson.next_lesson).to eql(nil)
+        expect(find_lesson.next_lesson).to be_nil
       end
     end
   end
@@ -32,7 +32,7 @@ RSpec.describe FindLesson do
       let(:current_lesson) { first_lesson }
 
       it 'returns nil' do
-        expect(find_lesson.previous_lesson).to eql(nil)
+        expect(find_lesson.previous_lesson).to be_nil
       end
     end
   end

@@ -2,16 +2,16 @@ require 'rails_helper'
 require 'rake'
 
 describe ':curriculum' do
-  before :all do
+  before do
     Rake.application.rake_require 'tasks/curriculum'
     Rake::Task.define_task(:environment)
   end
 
   describe 'curriculum:update_content' do
     let!(:lesson) do
-      FactoryBot.create(
+      create(
         :lesson,
-        url: '/README.md',
+        github_path: '/README.md',
         content: nil,
       )
     end

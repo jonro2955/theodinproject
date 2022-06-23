@@ -3,6 +3,9 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        transitionProperty: {
+          'stroke-dashoffset': 'stroke-dashoffset'
+        },
         'gold': {
           DEFAULT: '#CE973E',
           '50': '#F3E6D0',
@@ -41,6 +44,12 @@ module.exports = {
       margin: {
         '-25px': '-25px',
       },
+      textColor: {
+        primary: '#4a4a4a',
+      },
+      padding: {
+        '2px': '2px',
+      },
     },
   },
   purge: {
@@ -58,5 +67,7 @@ module.exports = {
   corePlugins: {
     container: false,
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/typography'),
+  ],
 }

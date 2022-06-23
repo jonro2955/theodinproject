@@ -2,16 +2,16 @@ require 'rails_helper'
 
 RSpec.describe UserMailer, type: :mailer do
   describe '#send_welcome_email_to' do
-    subject(:welcome_email) { UserMailer.send_welcome_email_to(user) }
+    subject(:welcome_email) { described_class.send_welcome_email_to(user) }
 
     let(:user) { create(:user, email: 'kevin@example.com') }
 
     it 'renders the correct sender address' do
-      expect(welcome_email.from).to eql(['no-reply@theodinproject.com'])
+      expect(welcome_email.from).to eql(['contact@theodinproject.com'])
     end
 
     it 'includes an attachment' do
-      expect(welcome_email.attachments.count).to eql(1)
+      expect(welcome_email.attachments.count).to eq(1)
     end
 
     it 'renders the correct attachment' do

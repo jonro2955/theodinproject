@@ -5,6 +5,8 @@ course = @path.add_course do |course|
   course.title = 'Ruby on Rails'
   course.description = "Take Ruby to the next level with the Ruby on Rails framework! Learn how to fully craft your site's backend using the Model-View-Controller design pattern. You'll gain the confidence to launch a website in under an hour."
   course.identifier_uuid = '100c8fbd-8cb0-4bdf-a809-66ecd69ec885'
+  course.show_on_homepage = true
+  course.badge_uri = 'badge-ruby-on-rails.svg'
 end
 
 # ++++++++++++++++++++++
@@ -55,16 +57,17 @@ course.add_section do |section|
 end
 
 # ++++++++++++++++++++++++++++
-# SECTION - The Asset Pipeline
+# SECTION - Assets and Navigation
 # ++++++++++++++++++++++++++++
 course.add_section do |section|
-  section.title = 'The Asset Pipeline'
-  section.description = 'This section covers the Asset Pipeline. Rails way of processing assets such as CSS, Javascript and Images.'
+  section.title = 'Assets and Navigation'
+  section.description = 'This section covers the how Rails serves your apps assets via The Asset Pipeline (Rails way of processing assets such as CSS, Javascript and Images.), and how it handles navigations within the app from links and form submissions.'
   section.identifier_uuid = 'db80ec29-a228-483c-b52b-c137c4ec0824'
 
   section.add_lessons(
     ruby_on_rails_lessons.fetch('The Asset Pipeline'),
     ruby_on_rails_lessons.fetch('Importmaps'),
+    ruby_on_rails_lessons.fetch('Turbo Drive'),
   )
 end
 

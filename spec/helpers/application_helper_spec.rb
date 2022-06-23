@@ -9,7 +9,7 @@ RSpec.describe ApplicationHelper do
 
     context 'when there is no input' do
       it 'returns nil' do
-        expect(title).to be nil
+        expect(title).to be_nil
       end
     end
   end
@@ -38,106 +38,70 @@ RSpec.describe ApplicationHelper do
     end
   end
 
-  context 'course progress' do
-    let(:user) { double('User') }
-    let(:course) { double('Course') }
-    let(:course_progress) { double('CourseProgress') }
+  describe '#percentage_completed_by_user' do
+    subject(:percentage_completed_by_user) { helper.percentage_completed_by_user(course, user) }
+
+    let(:course) { instance_double(Course) }
+    let(:user) { instance_double(User) }
+
+    before do
+      allow(user).to receive(:progress_for).and_return(course_progress)
+    end
+
+    context 'when user has not started the course' do
+      let(:course_progress) { instance_double(CourseProgress, percentage: 0) }
+
+      it 'returns 0%' do
+        expect(percentage_completed_by_user).to eq(0)
+      end
+    end
+
+    context 'when user has started the course' do
+      let(:course_progress) { instance_double(CourseProgress, percentage: 30) }
+
+      it 'returns 30%' do
+        expect(percentage_completed_by_user).to eq(30)
+      end
+    end
+
+    context 'when user has completed the course' do
+      let(:course_progress) { instance_double(CourseProgress, percentage: 100) }
+
+      it 'returns 100%' do
+        expect(percentage_completed_by_user).to eq(100)
+      end
+    end
+  end
+
+  describe '#course_completed_by_user?' do
+    subject(:course_completed_by_user?) { helper.course_completed_by_user?(course, user) }
+
+    let(:user) { instance_double(User) }
+    let(:course) { instance_double(Course) }
 
     before do
       allow(user).to receive(:progress_for).with(course).and_return(course_progress)
     end
 
-    context 'when user has not started the course' do
-      before do
-        allow(course_progress).to receive_messages(
-          started?: false,
-          completed?: false,
-          percentage: 0
-        )
-      end
+    context 'when the user has completed the course' do
+      let(:course_progress) { instance_double(CourseProgress, completed?: true) }
 
-      describe '#course_completed_by_user?' do
-        it 'returns false' do
-          expect(helper.course_completed_by_user?(course, user)).to eq(false)
-        end
-      end
-
-      describe '#percentage_completed_by_user' do
-        it 'returns 0' do
-          expect(helper.percentage_completed_by_user(course, user)).to eql(0)
-        end
-      end
-
-      describe '#modifier_for_badge' do
-        it 'returns the course show progress modifier for the course badge' do
-          expect(helper.modifier_for_badge(course, user)).to eql('progress-circle--show-progress')
-        end
-      end
+      it { is_expected.to be(true) }
     end
 
-    context 'when user has started the course' do
-      before do
-        allow(course_progress).to receive_messages(
-          started?: true,
-          completed?: false,
-          percentage: 30
-        )
-      end
+    context 'when the user has not completed the course' do
+      let(:course_progress) { instance_double(CourseProgress, completed?: false) }
 
-      describe '#course_completed_by_user?' do
-        it 'returns false' do
-          expect(helper.course_completed_by_user?(course, user)).to eq(false)
-        end
-      end
-
-      describe '#percentage_completed_by_user' do
-        it 'returns 30' do
-          expect(helper.percentage_completed_by_user(course, user)).to eql(30)
-        end
-      end
-
-      describe '#modifier_for_badge' do
-        it 'returns the course show progress modifier for the course badge' do
-          expect(helper.modifier_for_badge(course, user)).to eql('progress-circle--show-progress')
-        end
-      end
-    end
-
-    context 'when user has completed the course' do
-      before do
-        allow(course_progress).to receive_messages(
-          started?: true,
-          completed?: true,
-          percentage: 100
-        )
-      end
-
-      describe '#course_completed_by_user?' do
-        it 'returns true' do
-          expect(helper.course_completed_by_user?(course, user)).to eq(true)
-        end
-      end
-
-      describe '#percentage_completed_by_user' do
-        it 'returns 100' do
-          expect(helper.percentage_completed_by_user(course, user)).to eql(100)
-        end
-      end
-
-      describe '#modifier_for_badge' do
-        it 'returns the course completed modifier for the course badge' do
-          expect(helper.modifier_for_badge(course, user)).to eql('progress-circle--completed')
-        end
-      end
+      it { is_expected.to be(false) }
     end
   end
 
   describe '#next_lesson_to_complete' do
-    let(:course) { double('Course') }
+    let(:course) { instance_double(Course) }
     let(:lesson_completions) { [lesson_completion] }
-    let(:lesson_completion) { double('LessonCompletion') }
-    let(:next_lesson) { double('NextLesson', to_complete: lesson_to_complete) }
-    let(:lesson_to_complete) { double('Lesson') }
+    let(:lesson_completion) { instance_double(LessonCompletion) }
+    let(:next_lesson) { instance_double(NextLesson, to_complete: lesson_to_complete) }
+    let(:lesson_to_complete) { instance_double(Lesson) }
 
     before do
       allow(NextLesson).to receive(:new).with(course, lesson_completions).and_return(next_lesson)
@@ -152,17 +116,17 @@ RSpec.describe ApplicationHelper do
     let!(:user) { create(:user) }
 
     context 'when the user has unread notifications' do
-      let!(:unread_notification) { create(:notification, recipient: user, read_at: nil) }
-
       it 'returns true' do
+        create(:notification, recipient: user, read_at: nil)
+
         expect(helper.unread_notifications?(user)).to be true
       end
     end
 
     context 'when the user has no unread notifications' do
-      let!(:read_notification) { create(:notification, recipient: user, read_at: Time.zone.now) }
-
       it 'returns false' do
+        create(:notification, recipient: user, read_at: Time.zone.now)
+
         expect(helper.unread_notifications?(user)).to be false
       end
     end

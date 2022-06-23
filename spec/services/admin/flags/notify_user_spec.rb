@@ -1,11 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe Admin::Flags::NotifyUser do
-  subject(:service) { described_class.call(admin: admin, flag: flag) }
+  subject(:service) { described_class.call(admin:, flag:) }
 
   let(:admin) { create(:user, admin: true) }
-  let(:flag) { create(:flag, project_submission: project_submission) }
-  let(:project_submission) { create(:project_submission, user: user) }
+  let(:flag) { create(:flag, project_submission:) }
+  let(:project_submission) { create(:project_submission, user:) }
   let(:user) { create(:user) }
 
   describe '#call' do
@@ -26,7 +26,7 @@ RSpec.describe Admin::Flags::NotifyUser do
     end
 
     it 'updates the flag\'s project submission to set a discard at date seven days in the future' do
-      expect { service }.to change(project_submission, :discard_at).from(nil).to(7.days.from_now.all_day)
+      expect { service }.to change { project_submission.discard_at }.from(nil).to(7.days.from_now.all_day)
     end
   end
 end

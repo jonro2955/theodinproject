@@ -1,12 +1,12 @@
 require 'rails_helper'
 
 RSpec.describe NextLesson do
-  subject(:next_lesson) { NextLesson.new(course, lesson_completions) }
+  subject(:next_lesson) { described_class.new(course, lesson_completions) }
 
   let(:course) { create(:course) }
-  let!(:lesson_one) { create(:lesson, course: course) }
-  let!(:lesson_two) { create(:lesson, course: course) }
-  let!(:lesson_three) { create(:lesson, course: course) }
+  let!(:lesson_one) { create(:lesson, course:) }
+  let!(:lesson_two) { create(:lesson, course:) }
+  let!(:lesson_three) { create(:lesson, course:) }
 
   describe '#to_complete' do
     context 'when there are incomplete lessons after the most recently completed lesson' do
@@ -35,7 +35,7 @@ RSpec.describe NextLesson do
       end
 
       it 'returns nil' do
-        expect(next_lesson.to_complete).to eq(nil)
+        expect(next_lesson.to_complete).to be_nil
       end
     end
   end

@@ -1,14 +1,14 @@
 require 'rails_helper'
 
 RSpec.describe LessonDecorator do
-  subject(:lesson_decorator) { LessonDecorator.new(lesson) }
+  subject(:lesson_decorator) { described_class.new(lesson) }
 
   let(:lesson) do
     instance_double(
       Lesson,
       is_project?: is_project?,
       title: 'Ruby Basics',
-      course: course
+      course:
     )
   end
 
@@ -30,7 +30,7 @@ RSpec.describe LessonDecorator do
   end
 
   describe '#next_lesson' do
-    let(:find_lesson) { instance_double(FindLesson, next_lesson: next_lesson) }
+    let(:find_lesson) { instance_double(FindLesson, next_lesson:) }
     let(:next_lesson) { instance_double(Lesson) }
 
     before do

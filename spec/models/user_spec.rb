@@ -5,7 +5,7 @@ RSpec.describe User do
 
   it { is_expected.to validate_uniqueness_of(:email).ignoring_case_sensitivity }
   it { is_expected.to allow_value('example@email.com').for(:email) }
-  it { is_expected.to_not allow_value('bademail').for(:email) }
+  it { is_expected.not_to allow_value('bademail').for(:email) }
   it { is_expected.to validate_length_of(:username).is_at_least(2).is_at_most(100) }
   it { is_expected.to validate_length_of(:learning_goal).is_at_most(1700) }
 
@@ -42,10 +42,10 @@ RSpec.describe User do
   describe '#completed?' do
     let(:lesson) { create(:lesson) }
 
-    context 'when the user has completed  the lesson' do
-      let!(:lesson_completion) { create(:lesson_completion, lesson: lesson, user: user) }
-
+    context 'when the user has completed the lesson' do
       it 'returns true' do
+        create(:lesson_completion, lesson:, user:)
+
         expect(user.completed?(lesson)).to be(true)
       end
     end
@@ -67,21 +67,21 @@ RSpec.describe User do
         create(
           :lesson_completion,
           lesson: lesson_completed_last_week,
-          user: user,
+          user:,
           created_at: Time.zone.today - 7.days
         )
 
         create(
           :lesson_completion,
           lesson: lesson_completed_yesterday,
-          user: user,
+          user:,
           created_at: Time.zone.today - 1.day
         )
 
         create(
           :lesson_completion,
           lesson: lesson_completed_today,
-          user: user,
+          user:,
           created_at: Time.zone.today
         )
       end
@@ -93,17 +93,17 @@ RSpec.describe User do
 
     context 'when the user does not have any completed lessons' do
       it 'returns nil' do
-        expect(user.latest_completed_lesson).to be(nil)
+        expect(user.latest_completed_lesson).to be_nil
       end
     end
   end
 
   describe '#lesson_completions_for_course' do
     it 'returns the users lesson completions for a course' do
-      create(:lesson_completion, user: user)
+      create(:lesson_completion, user:)
       course = create(:course)
-      lesson_completion_one_for_course = create(:lesson_completion, course_id: course.id, user: user)
-      lesson_completion_two_for_course = create(:lesson_completion, course_id: course.id, user: user)
+      lesson_completion_one_for_course = create(:lesson_completion, course_id: course.id, user:)
+      lesson_completion_two_for_course = create(:lesson_completion, course_id: course.id, user:)
 
       expect(user.lesson_completions_for_course(course)).to contain_exactly(
         lesson_completion_one_for_course, lesson_completion_two_for_course
@@ -148,10 +148,10 @@ RSpec.describe User do
   end
 
   describe '#dismissed_flags' do
-    let!(:non_dismissed_flag) { create(:flag, flagger: user, taken_action: :ban) }
-    let!(:dismissed_flag) { create(:flag, flagger: user, taken_action: :dismiss) }
-
     it 'returns flags the user has made that have been dismissed' do
+      non_dismissed_flag = create(:flag, flagger: user, taken_action: :ban)
+      dismissed_flag = create(:flag, flagger: user, taken_action: :dismiss)
+
       expect(user.dismissed_flags).to contain_exactly(dismissed_flag)
     end
   end
@@ -160,9 +160,9 @@ RSpec.describe User do
     let(:course) { create(:course) }
 
     context 'when the user has started the course' do
-      let!(:lesson_completion) { create(:lesson_completion, user: user, course: course) }
-
       it 'returns true' do
+        lesson_completion = create(:lesson_completion, user:, course:)
+
         expect(user.started_course?(course)).to be(true)
       end
     end
